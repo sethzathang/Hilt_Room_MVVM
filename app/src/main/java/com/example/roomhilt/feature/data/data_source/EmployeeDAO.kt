@@ -1,6 +1,5 @@
 package com.example.roomhilt.feature.data.data_source
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -13,7 +12,7 @@ interface EmployeeDAO {
      * Not need to use a suspend function since LiveData already works in the background thread
      */
     @Query("SELECT * FROM my_employee")
-    fun selectEmployees(): LiveData<List<EmployeeEntity>>
+    suspend fun selectEmployees(): List<EmployeeEntity>
 
     /**
      * suspend functions can execute a long running operation
