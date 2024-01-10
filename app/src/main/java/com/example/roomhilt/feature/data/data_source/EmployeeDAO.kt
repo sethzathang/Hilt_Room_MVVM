@@ -12,7 +12,7 @@ interface EmployeeDAO {
      * Not need to use a suspend function since LiveData already works in the background thread
      */
     @Query("SELECT * FROM my_employee")
-    suspend fun selectEmployees(): List<EmployeeEntity>
+    suspend fun getEmployees(): List<EmployeeEntity>
 
     /**
      * suspend functions can execute a long running operation

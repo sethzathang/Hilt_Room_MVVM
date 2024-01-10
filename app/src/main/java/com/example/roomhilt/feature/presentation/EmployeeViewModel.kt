@@ -1,58 +1,36 @@
 package com.example.roomhilt.feature.presentation
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.roomhilt.feature.data.data_source.EmployeeDAO
 import com.example.roomhilt.feature.data.data_source.EmployeeEntity
+import com.example.roomhilt.feature.data.repository.EmployeeRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Purpose is to collect data from the repository/ies
+ * And expose to the the fragment / activities
+ */
 @HiltViewModel
 class EmployeeViewModel @Inject constructor(
-    private val employeeDAO: EmployeeDAO
+    private val repository: EmployeeRepositoryImpl
 ) : ViewModel() {
 
-    private val _viewState = MutableStateFlow<EmployeeViewState>(EmployeeViewState.Initial)
-    val viewState: StateFlow<EmployeeViewState> = _viewState
+    private val _viewState: MutableLiveData<List<EmployeeEntity>> = MutableLiveData()
+    val viewState: LiveData<List<EmployeeEntity>> = _viewState
 
-    init {
-        getEmployee()
+    fun getData() = viewModelScope.launch {
+        _viewState.value = repository.getEmployee()
     }
 
-    fun getEmployee() {
-        viewModelScope.launch {
-            _viewState.value = EmployeeViewState.Loading
-            delay(300L)
-            if (employeeDAO.selectEmployees().isEmpty()) {
-                _viewState.value = EmployeeViewState.Error
-            } else {
-                _viewState.value = EmployeeViewState.Success(
-                    name = employeeDAO.selectEmployees().toString()
-                )
-            }
-        }
+    fun addEmployee(name: String) = viewModelScope.launch {
+        repository.addEmployee(EmployeeEntity(name = name))
     }
 
-    fun hireNewEmployee(name: String) {
-        viewModelScope.launch {
-            employeeDAO.insertEmployee(EmployeeEntity(name = name))
-        }
-    }
-
-    fun fireEmployee(name: String) {
-        viewModelScope.launch {
-            employeeDAO.deleteEmployee(EmployeeEntity(name = name))
-        }
-    }
-
-    sealed class EmployeeViewState{
-        object Initial: EmployeeViewState()
-        object Loading: EmployeeViewState()
-        object Error: EmployeeViewState()
-        data class Success(val name: String) : EmployeeViewState()
+    fun removeEmployee(name: String) = viewModelScope.launch {
+        repository.deleteEmployee(EmployeeEntity(name = name))
     }
 }

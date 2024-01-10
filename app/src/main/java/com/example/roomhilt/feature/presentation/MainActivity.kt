@@ -1,50 +1,52 @@
 package com.example.roomhilt.feature.presentation
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.roomhilt.databinding.ActivityMainBinding
+import com.example.roomhilt.feature.data.data_source.EmployeeEntity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityMainBinding
-
-    private val viewModel by viewModels<EmployeeViewModel>()
+    private lateinit var viewModel: EmployeeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel.hireNewEmployee("Testing")
+        viewModel = ViewModelProvider(this)[EmployeeViewModel::class.java]
+        viewModel.viewState.observe(this, Observer(this::observer))
 
-        lifecycleScope.launch {
-            viewModel.viewState.collect { state ->
-                when(state) {
-                    is EmployeeViewModel.EmployeeViewState.Initial -> {
-                        binding.greeting.text = "Initial"
-                        println("TEST: Initial")
-                    }
+        doOtherStuffs()
+    }
 
-                    is EmployeeViewModel.EmployeeViewState.Loading -> {
-                        binding.greeting.text = "Loading"
-                        println("TEST: Loading")
-                    }
+    private fun observer(data: List<EmployeeEntity>) {
+        if (data.isEmpty()) {
+            binding.greeting.text = "Data is empty"
+        } else {
+            binding.greeting.text = data.toString()
+        }
+    }
 
-                    is EmployeeViewModel.EmployeeViewState.Error -> {
-                        binding.greeting.text = "Error"
-                        println("TEST: Error")
-                    }
+    private fun doOtherStuffs() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            binding.addEmployee.setOnClickListener {
+                viewModel.addEmployee(binding.inputName.text.toString())
+            }
 
-                    is EmployeeViewModel.EmployeeViewState.Success -> {
-                        binding.greeting.text = state.name
-                        println("TEST: Success")
-                    }
-                }
+            binding.refresh.setOnClickListener {
+                viewModel.getData()
+            }
+
+            binding.clearDatabase.setOnClickListener {
+                viewModel.removeEmployee(binding.inputName.text.toString())
             }
         }
     }
