@@ -8,7 +8,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.roomhilt.databinding.ActivityMainBinding
 import com.example.roomhilt.feature.data.data_source.EmployeeEntity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -36,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun doOtherStuffs() {
-        lifecycleScope.launch(Dispatchers.Main) {
+        lifecycleScope.launch {
             binding.addEmployee.setOnClickListener {
                 viewModel.addEmployee(binding.inputName.text.toString())
             }
