@@ -20,11 +20,15 @@ class EmployeeViewModel @Inject constructor(
     private val repository: EmployeeRepositoryImpl
 ) : ViewModel() {
 
-    private val _viewState: MutableLiveData<List<EmployeeEntity>> = MutableLiveData()
-    val viewState: LiveData<List<EmployeeEntity>> = _viewState
+    private val _viewState: MutableLiveData<List<EmployeeUIModel>> = MutableLiveData()
+    val viewState: LiveData<List<EmployeeUIModel>> = _viewState
 
     fun getData() = viewModelScope.launch(Dispatchers.IO) {
-        _viewState.postValue(repository.getEmployee())
+        _viewState.postValue(
+            repository.getEmployee().map { data ->
+                EmployeeUIModel(data.name)
+            }
+        )
     }
 
     fun addEmployee(name: String) = viewModelScope.launch(Dispatchers.IO) {

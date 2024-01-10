@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.roomhilt.databinding.ActivityMainBinding
-import com.example.roomhilt.feature.data.data_source.EmployeeEntity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         doOtherStuffs()
     }
 
-    private fun observer(data: List<EmployeeEntity>) {
+    private fun observer(data: List<EmployeeUIModel>) {
         if (data.isEmpty()) {
             binding.greeting.text = "Data is empty"
         } else {
@@ -51,3 +50,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
