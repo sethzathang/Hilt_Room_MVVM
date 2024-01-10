@@ -39,9 +39,9 @@
         android:text="Refresh" />
 
     <Button
-        android:id="@+id/clear_database"
+        android:id="@+id/clear_table"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Clear DB" />
+        android:text="Clear Table" />
 
 </LinearLayout>

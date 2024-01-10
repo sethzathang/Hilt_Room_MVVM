@@ -19,8 +19,8 @@ class EmployeeRepositoryImpl @Inject constructor(
         employeeDAO.insertEmployee(employee)
     }
 
-    suspend fun deleteEmployee(employee: EmployeeEntity) {
-        employeeDAO.deleteEmployee(employee)
+    suspend fun clearEmployee() {
+        employeeDAO.clearAllRowsInEmployeeTable()
     }
 }
 

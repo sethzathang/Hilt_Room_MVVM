@@ -1,7 +1,6 @@
 package com.example.roomhilt.feature.data.data_source
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -27,6 +26,6 @@ interface EmployeeDAO {
      * and wait for it to complete without blocking.
      * But they can only be called by another suspend function or within a coroutine
      */
-    @Delete
-    suspend fun deleteEmployee(employee: EmployeeEntity)
+    @Query("DELETE FROM my_employee")
+    suspend fun clearAllRowsInEmployeeTable()
 }

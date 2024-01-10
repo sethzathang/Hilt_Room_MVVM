@@ -30,7 +30,7 @@ class EmployeeViewModel @Inject constructor(
         repository.addEmployee(EmployeeEntity(name = name))
     }
 
-    fun removeEmployee(name: String) = viewModelScope.launch {
-        repository.deleteEmployee(EmployeeEntity(name = name))
+    fun clearEmployee() = viewModelScope.launch {
+        repository.clearEmployee()
     }
 }

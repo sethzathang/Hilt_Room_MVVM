@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: EmployeeViewModel
 
@@ -44,8 +45,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.getData()
             }
 
-            binding.clearDatabase.setOnClickListener {
-                viewModel.removeEmployee(binding.inputName.text.toString())
+            binding.clearTable.setOnClickListener {
+                viewModel.clearEmployee()
             }
         }
     }
