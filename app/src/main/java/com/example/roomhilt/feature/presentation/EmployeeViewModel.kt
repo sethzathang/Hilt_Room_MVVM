@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.roomhilt.feature.data.data_source.EmployeeEntity
 import com.example.roomhilt.feature.data.repository.EmployeeRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,15 +23,15 @@ class EmployeeViewModel @Inject constructor(
     private val _viewState: MutableLiveData<List<EmployeeEntity>> = MutableLiveData()
     val viewState: LiveData<List<EmployeeEntity>> = _viewState
 
-    fun getData() = viewModelScope.launch {
-        _viewState.value = repository.getEmployee()
+    fun getData() = viewModelScope.launch(Dispatchers.IO) {
+        _viewState.postValue(repository.getEmployee())
     }
 
-    fun addEmployee(name: String) = viewModelScope.launch {
+    fun addEmployee(name: String) = viewModelScope.launch(Dispatchers.IO) {
         repository.addEmployee(EmployeeEntity(name = name))
     }
 
-    fun clearEmployee() = viewModelScope.launch {
+    fun clearEmployee() = viewModelScope.launch(Dispatchers.IO) {
         repository.clearEmployee()
     }
 }
